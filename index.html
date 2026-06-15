@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2026 曜日盃 TWO — 贊助募集</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700;900&family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Noto Sans TC',sans-serif;background:#f5f0e8;color:#1a1a2e}
+
+/* ── HERO ── */
+#hero{position:relative;width:100vw;height:100vh;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#c{position:absolute;inset:0;width:100%;height:100%;cursor:pointer;z-index:0}
+.hero-content{position:relative;z-index:2;text-align:center;padding:0 24px;margin-top:-6vh}
+.hero-badge{display:inline-flex;align-items:center;gap:7px;padding:6px 16px;background:rgba(201,170,106,.18);border:1px solid rgba(201,170,106,.45);border-radius:99px;font-size:11.5px;letter-spacing:.14em;color:rgba(26,26,46,.7);margin-bottom:10px;font-family:'Noto Serif TC',serif;backdrop-filter:blur(8px)}
+.hero-badge::before{content:'';width:6px;height:6px;border-radius:50%;background:#c9aa6a;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.8)}}
+.hero-svg-title{width:clamp(220px,46vw,540px);margin:0 auto}.hero-svg-title img{width:100%;height:auto;display:block;mix-blend-mode:multiply}
+.hero-en{font-size:clamp(10px,1.6vw,16px);letter-spacing:.4em;color:rgba(26,26,46,.38);font-weight:300;margin-top:4px;font-family:'Noto Serif TC',serif}
+.hero-tagline{font-size:clamp(13px,1.8vw,16px);color:rgba(26,26,46,.6);margin-top:8px;letter-spacing:.06em;font-weight:300}
+.hero-divider{width:36px;height:1px;background:rgba(201,170,106,.55);margin:10px auto}
+.hero-date{font-size:clamp(11px,1.4vw,13px);color:rgba(26,26,46,.5);letter-spacing:.13em}
+.hero-meta{margin-top:4px;font-size:clamp(10px,1.1vw,11.5px);color:rgba(26,26,46,.35);letter-spacing:.15em}
+.hero-actions{margin-top:14px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.ha-primary{padding:11px 26px;background:#1a1a2e;color:#c9aa6a;border:none;border-radius:99px;font-size:13.5px;font-weight:700;cursor:pointer;font-family:'Noto Serif TC',serif;letter-spacing:.06em;transition:background .2s,transform .2s;outline:none}
+.ha-primary:hover{background:#2a2a4e;transform:translateY(-2px)}
+.ha-secondary{padding:10px 22px;background:rgba(255,255,255,.22);color:rgba(26,26,46,.65);border:1px solid rgba(26,26,46,.2);border-radius:99px;font-size:13px;cursor:pointer;font-family:'Noto Sans TC',sans-serif;letter-spacing:.06em;transition:all .2s;outline:none;backdrop-filter:blur(8px);text-decoration:none;display:inline-flex;align-items:center}
+.ha-secondary:hover{background:rgba(255,255,255,.35);transform:translateY(-2px)}
+.scroll-hint{position:absolute;bottom:74px;left:50%;transform:translateX(-50%);z-index:2;display:flex;flex-direction:column;align-items:center;gap:5px;opacity:.35;animation:bounce 2.4s ease-in-out infinite;pointer-events:none}
+.scroll-hint span{font-size:10px;letter-spacing:.2em;color:#1a1a2e}
+.scroll-hint svg{width:17px;height:17px;fill:none;stroke:#1a1a2e;stroke-width:1.8}
+@keyframes bounce{0%,100%{transform:translateX(-50%) translateY(0)}55%{transform:translateX(-50%) translateY(8px)}}
+
+/* ── Ctrl bar ── */
+#ctrl{position:absolute;bottom:15px;left:50%;transform:translateX(-50%);z-index:100;display:flex;align-items:center;gap:8px;padding:8px 14px;background:rgba(14,12,10,.82);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-radius:99px;border:1px solid rgba(255,255,255,.08);box-shadow:0 8px 28px rgba(0,0,0,.28);user-select:none;white-space:nowrap}
+.cdiv{width:1px;height:15px;background:rgba(255,255,255,.12);flex-shrink:0}
+.ckbtn{width:19px;height:19px;border-radius:50%;border:2.5px solid transparent;cursor:pointer;transition:transform .18s,border-color .18s;flex-shrink:0;outline:none}
+.ckbtn:hover{transform:scale(1.2)}
+.ckbtn.active{border-color:rgba(255,255,255,.85);transform:scale(1.12)}
+.ibtn{display:flex;align-items:center;gap:4px;padding:3px 9px;border-radius:99px;border:1px solid rgba(255,255,255,.12);background:transparent;color:rgba(255,255,255,.6);font-size:11px;cursor:pointer;transition:background .18s,color .18s;white-space:nowrap;font-family:'Noto Sans TC',sans-serif;outline:none}
+.ibtn:hover{background:rgba(255,255,255,.09);color:#fff}
+.ibtn.active{background:rgba(255,255,255,.12);color:#fff}
+
+/* ── Float CTA ── */
+#float-cta{position:fixed;bottom:24px;right:24px;z-index:150;opacity:0;transform:translateY(10px);transition:opacity .4s,transform .4s;pointer-events:none}
+#float-cta.show{opacity:1;transform:none;pointer-events:auto}
+#float-cta button{padding:13px 24px;background:#1a1a2e;color:#c9aa6a;border:none;border-radius:99px;font-size:13.5px;font-weight:700;cursor:pointer;font-family:'Noto Serif TC',serif;letter-spacing:.06em;box-shadow:0 8px 28px rgba(0,0,0,.28);transition:background .2s,transform .2s}
+#float-cta button:hover{background:#2a2a4e;transform:translateY(-2px)}
+
+/* ── Reveal animations ── */
+.reveal{opacity:0;transform:translateY(22px);transition:opacity .75s ease,transform .75s ease}
+.reveal.in{opacity:1;transform:none}
+.reveal-d1{transition-delay:.1s}.reveal-d2{transition-delay:.2s}.reveal-d3{transition-delay:.3s}.reveal-d4{transition-delay:.4s}
+
+/* ── SECTIONS ── */
+section{padding:80px 8vw}
+.sec-label{font-size:10.5px;letter-spacing:.32em;color:rgba(26,26,46,.32);font-weight:400;margin-bottom:10px;text-transform:uppercase;font-family:'Noto Serif TC',serif}
+.sec-title{font-family:'Noto Serif TC',serif;font-size:clamp(26px,4.2vw,44px);font-weight:900;color:#1a1a2e;line-height:1.18;margin-bottom:24px}
+.sec-body{font-size:clamp(14px,1.6vw,15.5px);line-height:2.05;color:rgba(26,26,46,.6);max-width:580px}
+
+/* ── Story ── */
+#sec-story{background:#faf7f2;display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center}
+.story-tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:24px}
+.stag{padding:5px 13px;border:1px solid rgba(201,170,106,.4);border-radius:99px;font-size:11px;color:rgba(26,26,46,.48);letter-spacing:.07em;background:#fff}
+.story-visual{display:grid;grid-template-columns:1fr 1fr;gap:13px}
+.sv-item{padding:22px 18px;background:#fff;border-radius:12px;border:1px solid rgba(201,170,106,.16);transition:border-color .25s,box-shadow .25s}
+.sv-item:hover{border-color:rgba(201,170,106,.45);box-shadow:0 6px 24px rgba(201,170,106,.1)}
+.sv-n{font-family:'Noto Serif TC',serif;font-size:clamp(28px,3.8vw,44px);font-weight:900;color:#1a1a2e;line-height:1;margin-bottom:5px}
+.sv-d{font-size:11px;color:rgba(26,26,46,.4);letter-spacing:.07em}
+
+/* ── Data ── */
+#sec-data{background:#14121a;text-align:center;position:relative;background-image:linear-gradient(rgba(14,12,18,.84),rgba(14,12,18,.84)),url('images/photo-bg.jpg');background-size:cover;background-position:center 40%}
+#sec-data>*{position:relative;z-index:1}
+#sec-data .sec-label{color:rgba(201,170,106,.4)}
+#sec-data .sec-title{color:#f0ebe0}
+#sec-data .sec-body{color:rgba(240,235,224,.38);margin:0 auto 48px}
+.data-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;max-width:840px;margin:0 auto 48px;background:rgba(255,255,255,.04);border-radius:16px;overflow:hidden}
+.dg-item{padding:40px 18px;background:#14121a;transition:background .25s}
+.dg-item:hover{background:#1d1a28}
+.dg-n{font-family:'Noto Serif TC',serif;font-size:clamp(36px,5.2vw,64px);font-weight:900;color:#c9aa6a;line-height:1;margin-bottom:8px}
+.dg-d{font-size:12px;color:rgba(240,235,224,.38);letter-spacing:.12em}
+.data-note{font-size:12px;color:rgba(240,235,224,.24);letter-spacing:.1em;border-top:1px solid rgba(255,255,255,.06);padding-top:28px;max-width:440px;margin:0 auto;line-height:2.1}
+
+/* ── Why ── */
+#sec-why{background:#f5f0e8}
+.why-intro{max-width:640px;margin-bottom:44px}
+.why-intro .sec-body{max-width:none}
+.why-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.wg-item{padding:28px 22px;background:#fff;border-radius:14px;border:1px solid rgba(201,170,106,.15);transition:border-color .25s,transform .25s,box-shadow .25s}
+.wg-item:hover{border-color:rgba(201,170,106,.4);transform:translateY(-4px);box-shadow:0 12px 36px rgba(201,170,106,.12)}
+.wg-icon{font-size:26px;margin-bottom:14px}
+.wg-title{font-family:'Noto Serif TC',serif;font-size:15px;font-weight:700;color:#1a1a2e;margin-bottom:8px}
+.wg-num{font-family:'Noto Serif TC',serif;font-size:22px;font-weight:900;color:#c9aa6a;margin-bottom:5px}
+.wg-body{font-size:13px;line-height:1.9;color:rgba(26,26,46,.5)}
+
+/* ── Plans ── */
+#sec-plans{background:#fffbf4}
+.plans-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:44px}
+.plan-card{border-radius:16px;padding:28px 18px;border:1.5px solid rgba(201,170,106,.18);background:#fff;position:relative;overflow:hidden;transition:transform .25s,box-shadow .25s,border-color .25s}
+.plan-card:hover{transform:translateY(-5px);box-shadow:0 14px 40px rgba(0,0,0,.1)}
+.plan-card.naming{background:#26222e;border-color:#c9aa6a}
+.plan-card.naming:hover{box-shadow:0 14px 40px rgba(201,170,106,.25)}
+.plan-badge{position:absolute;top:0;right:0;padding:5px 12px;font-size:10px;letter-spacing:.1em;border-bottom-left-radius:10px;background:#c9aa6a;color:#1a1a2e}
+.plan-tier{font-family:'Noto Serif TC',serif;font-size:18px;font-weight:900;margin-bottom:2px}
+.bronze .plan-tier{color:#cd7f32}.silver .plan-tier{color:#888}.gold .plan-tier{color:#b8860b}.naming .plan-tier{color:#c9aa6a}
+.plan-price{font-size:12px;color:rgba(26,26,46,.36);margin-bottom:16px}
+.naming .plan-price{color:rgba(201,170,106,.65)}
+.plan-divider{height:1px;background:rgba(201,170,106,.15);margin-bottom:13px}
+.plan-item{font-size:12px;color:rgba(26,26,46,.55);line-height:1.85;display:flex;gap:6px;align-items:flex-start;margin-bottom:5px}
+.naming .plan-item{color:rgba(240,235,224,.82)}
+.plan-item::before{content:'·';color:#c9aa6a;flex-shrink:0}
+
+/* ── Contact ── */
+#sec-contact{background:#14121a;text-align:center}
+#sec-contact .sec-label{color:rgba(201,170,106,.42)}
+#sec-contact .sec-title{color:#f0ebe0}
+#sec-contact .sec-body{color:rgba(240,235,224,.4);margin:0 auto 32px}
+.contact-info{margin-bottom:32px;color:rgba(240,235,224,.52);font-size:14px;line-height:2.5;letter-spacing:.06em}
+.contact-info a{color:#c9aa6a;text-decoration:none}
+.contact-info a:hover{text-decoration:underline}
+.contact-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.cbtn-main{padding:13px 28px;border-radius:99px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Noto Serif TC',serif;letter-spacing:.05em;transition:all .2s;outline:none;border:none}
+.cbtn-corp{background:#c9aa6a;color:#1a1a2e}
+.cbtn-corp:hover{background:#dfc07a;transform:translateY(-2px)}
+.cbtn-pers{background:transparent;color:#c9aa6a;border:1.5px solid #c9aa6a}
+.cbtn-pers:hover{background:rgba(201,170,106,.1);transform:translateY(-2px)}
+.urgency-note{margin-top:28px;font-size:12px;color:rgba(240,235,224,.28);letter-spacing:.1em}
+/* ── PDF Downloads ── */
+.hero-dl-row{margin-top:7px;display:flex;gap:9px;justify-content:center;flex-wrap:wrap}
+.ha-dl{display:inline-flex;align-items:center;gap:5px;padding:6px 15px;border-radius:99px;border:1px solid rgba(26,26,46,.18);background:rgba(255,255,255,.26);color:rgba(26,26,46,.48);font-size:11px;text-decoration:none;letter-spacing:.08em;transition:all .2s;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.ha-dl:hover{background:rgba(255,255,255,.5);color:#1a1a2e;border-color:rgba(26,26,46,.32)}
+.ha-dl svg{width:11px;height:11px;flex-shrink:0}
+.dl-row{margin-top:22px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.cbtn-dl{display:inline-flex;align-items:center;gap:7px;padding:10px 22px;border-radius:99px;border:1px solid rgba(201,170,106,.32);background:transparent;color:rgba(240,235,224,.55);font-size:12.5px;text-decoration:none;letter-spacing:.07em;transition:all .2s;font-family:'Noto Sans TC',sans-serif;cursor:pointer}
+.cbtn-dl:hover{border-color:#c9aa6a;color:#c9aa6a;background:rgba(201,170,106,.09);transform:translateY(-2px)}
+.cbtn-dl svg{width:13px;height:13px;flex-shrink:0;opacity:.7}
+
+/* ── Lightbox ── */
+#lb{position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:500;display:none;align-items:center;justify-content:center;cursor:zoom-out;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+#lb.open{display:flex;animation:lbIn .22s ease}
+@keyframes lbIn{from{opacity:0}to{opacity:1}}
+#lb-inner{position:relative;max-width:92vw;max-height:92vh;cursor:default}
+#lb-img{max-width:92vw;max-height:88vh;object-fit:contain;border-radius:8px;box-shadow:0 32px 80px rgba(0,0,0,.7);display:block}
+#lb-close{position:absolute;top:-16px;right:-16px;width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.22);color:rgba(255,255,255,.85);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .18s}
+#lb-close:hover{background:rgba(255,255,255,.28)}
+.gp{cursor:zoom-in}
+
+/* ── MODALS ── */
+.mbg{position:fixed;inset:0;background:rgba(8,6,16,.78);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);z-index:200;display:none;align-items:center;justify-content:center;padding:20px}
+.mbg.open{display:flex}
+.mbox{background:#faf7f2;border-radius:20px;padding:30px 26px;max-width:460px;width:100%;max-height:90vh;overflow-y:auto;position:relative;box-shadow:0 24px 80px rgba(0,0,0,.44)}
+.mclose{position:absolute;top:14px;right:18px;font-size:22px;cursor:pointer;color:rgba(30,30,60,.3);background:none;border:none;padding:4px;line-height:1}
+.mclose:hover{color:rgba(30,30,60,.75)}
+.mtitle{font-family:'Noto Serif TC',serif;font-size:19px;font-weight:700;color:#1a1a2e;margin-bottom:5px}
+.mdesc{font-size:12.5px;color:rgba(30,30,60,.46);margin-bottom:22px;line-height:1.75}
+.entry-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.ech{padding:22px 14px;border:1.5px solid rgba(201,170,106,.26);border-radius:13px;text-align:center;cursor:pointer;transition:border-color .2s,background .2s,transform .2s;background:#fff}
+.ech:hover{border-color:#c9aa6a;background:#fffbf4;transform:translateY(-2px)}
+.ech-icon{font-size:26px;margin-bottom:9px}
+.ech-title{font-size:14px;font-weight:700;color:#1a1a2e;margin-bottom:3px}
+.ech-sub{font-size:11px;color:rgba(30,30,60,.43);line-height:1.6}
+.fg{margin-bottom:14px}
+.fl{display:block;font-size:11.5px;font-weight:500;color:rgba(30,30,60,.56);letter-spacing:.07em;margin-bottom:5px}
+.fl .req{color:#c0392b;margin-left:2px}
+.fi,.fs,.ft{width:100%;padding:9px 13px;border:1.5px solid rgba(30,30,60,.13);border-radius:9px;font-size:13.5px;font-family:'Noto Sans TC',sans-serif;color:#1a1a2e;background:#fff;outline:none;transition:border-color .18s}
+.fi:focus,.fs:focus,.ft:focus{border-color:#c9aa6a}
+.ft{resize:vertical;min-height:68px}
+.tier-opts{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.tr{display:none}
+.tr+label{display:block;padding:9px 10px;border:1.5px solid rgba(30,30,60,.13);border-radius:9px;cursor:pointer;text-align:center;transition:all .18s;background:#fff}
+.tr:checked+label{border-color:#c9aa6a;background:#fffbf4}
+.tn{font-size:13px;font-weight:700;color:#1a1a2e;display:block}
+.tp{font-size:10.5px;color:rgba(30,30,60,.43);display:block;margin-top:1px}
+#tp{margin-top:8px;padding:10px 12px;background:rgba(201,170,106,.08);border-radius:9px;font-size:11.5px;color:rgba(30,30,60,.68);line-height:1.85;display:none}
+#tp.show{display:block}
+.ferr{font-size:11.5px;color:#c0392b;margin-top:3px;display:none}
+.ferr.show{display:block}
+.fsub{width:100%;padding:12px;background:#1a1a2e;color:#c9aa6a;border:none;border-radius:9px;font-size:14.5px;font-weight:700;cursor:pointer;transition:background .18s,transform .18s;font-family:'Noto Serif TC',serif;margin-top:6px;letter-spacing:.04em}
+.fsub:hover:not(:disabled){background:#2a2a4e;transform:scale(1.02)}
+.fsub:disabled{opacity:.52;cursor:not-allowed}
+.fsuc{text-align:center;padding:22px 0;display:none}
+.fsuc.show{display:block}
+.fsuc-icon{font-size:44px;margin-bottom:14px}
+.fsuc-title{font-size:17px;font-weight:700;color:#1a1a2e;margin-bottom:7px}
+.fsuc-desc{font-size:12.5px;color:rgba(30,30,60,.46);line-height:1.8}
+.plans-mini{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px}
+.pm{border-radius:10px;padding:12px 10px;text-align:center;border:1.5px solid rgba(201,170,106,.22)}
+.pm.bronze{background:#fff7f0;border-color:#cd7f32}.pm.silver{background:#f8f8f8;border-color:#a8a9ad}.pm.gold{background:#fffbf0;border-color:#c9aa6a}.pm.naming{background:#26222e;border-color:#c9aa6a}
+.pm-name{font-size:13px;font-weight:700;font-family:'Noto Serif TC',serif;margin-bottom:2px}
+.pm-price{font-size:11px;opacity:.52}
+.bronze .pm-name{color:#cd7f32}.silver .pm-name{color:#707070}.gold .pm-name{color:#b8860b}.naming .pm-name{color:#c9aa6a}.naming .pm-price{color:rgba(255,255,255,.62)}
+
+/* ── Gallery ── */
+#sec-gallery{background:#0e0c0f;padding:80px 8vw}
+#sec-gallery .sec-label{color:rgba(201,170,106,.35)}
+#sec-gallery .sec-title{color:#f0ebe0;margin-bottom:10px}
+#sec-gallery .sec-intro{font-size:clamp(13px,1.5vw,15px);color:rgba(240,235,224,.35);line-height:1.9;letter-spacing:.04em;margin-bottom:44px;max-width:540px}
+.gallery-grid{display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(4,220px);gap:8px}
+.gp{overflow:hidden;border-radius:10px;position:relative}
+.gp img{width:100%;height:100%;object-fit:cover;transition:transform .55s cubic-bezier(.25,.46,.45,.94),filter .55s;display:block}
+.gp:hover img{transform:scale(1.07);filter:brightness(1.06)}
+.gp-wide{grid-column:span 2}
+.gp-tall{grid-row:span 2}
+.gallery-credit{margin-top:14px;font-size:11px;color:rgba(240,235,224,.18);letter-spacing:.15em;text-align:right}
+
+/* ── Responsive ── */
+@media(max-width:860px){
+  #sec-story{grid-template-columns:1fr}
+  .story-visual{grid-template-columns:1fr 1fr}
+  .why-grid{grid-template-columns:1fr}
+  .plans-grid{grid-template-columns:1fr 1fr}
+  section{padding:60px 6vw}
+  #sec-gallery{padding:60px 6vw}
+  .gallery-grid{grid-template-columns:1fr 1fr;grid-template-rows:auto}
+  .gp-wide{grid-column:span 2}
+  .gp-tall{grid-row:auto}
+  .gp{height:190px}
+  #ctrl{gap:6px;padding:7px 12px}
+}
+@media(max-width:520px){
+  section{padding:48px 5vw}
+  #sec-gallery{padding:48px 5vw}
+  /* Hero */
+  .hero-en{letter-spacing:.18em}
+  .hero-divider{margin:12px auto}
+  .hero-actions{flex-direction:column;align-items:center;gap:10px}
+  .ha-primary,.ha-secondary{width:100%;max-width:260px;text-align:center;justify-content:center}
+  .hero-dl-row{gap:7px}
+  /* Ctrl bar */
+  #ctrl{gap:5px;padding:6px 10px}
+  .ibtn{font-size:10px;padding:2px 7px}
+  .ckbtn{width:16px;height:16px}
+  /* Data */
+  .data-grid{grid-template-columns:1fr 1fr}
+  /* Plans */
+  .plans-grid{grid-template-columns:1fr}
+  /* Gallery */
+  .gallery-grid{grid-template-columns:1fr 1fr;gap:5px}
+  .gp{height:160px}
+  .gp-wide{grid-column:span 2}
+  /* Contact */
+  .contact-btns{flex-direction:column;align-items:center}
+  .cbtn-main{width:100%;max-width:280px}
+  .dl-row{flex-direction:column;align-items:center}
+  .cbtn-dl{width:100%;max-width:280px;justify-content:center}
+  /* Float CTA */
+  #float-cta{bottom:16px;right:14px}
+  #float-cta button{padding:11px 18px;font-size:12.5px}
+  /* Modal */
+  .mbox{padding:24px 18px;border-radius:16px}
+  .entry-grid{grid-template-columns:1fr 1fr}
+  .tier-opts{grid-template-columns:1fr 1fr}
+}
+@media(max-width:380px){
+  #ctrl{flex-wrap:wrap;width:88%;justify-content:center}
+  .data-grid{grid-template-columns:1fr}
+  .entry-grid{grid-template-columns:1fr}
+  .plans-mini{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- ══ HERO ══ -->
+<div id="hero">
+  <canvas id="c"></canvas>
+  <div class="hero-content">
+    <div class="hero-badge">贊助募集進行中 · 2026</div>
+    <div class="hero-svg-title"><img src="calligraphy_clean.svg" alt="曜日盃 TWO"></div>
+    <div class="hero-en">SOLAR CUP TWO</div>
+    <div class="hero-tagline">讓你的品牌，和我們一起留下歷史</div>
+    <div class="hero-tagline" style="margin-top:6px;font-size:clamp(11px,1.4vw,13.5px);color:rgba(26,26,46,.38);letter-spacing:.12em">匯集您的支持 · 成為我們前進的力量</div>
+    <div class="hero-divider"></div>
+    <div class="hero-date">2026 . 08 . 15（六）· 臺北市大安運動中心</div>
+    <div class="hero-meta">邀請制 · 嚴選 108 組隊伍 · 九大社群聯動</div>
+    <div class="hero-actions">
+      <button class="ha-primary" onclick="openEntry()">立即申請贊助</button>
+      <a class="ha-secondary" href="#sec-plans">了解方案</a>
+    </div>
+    <div class="hero-dl-row">
+      <a class="ha-dl" href="https://drive.google.com/uc?export=download&confirm=t&id=19dxk_aN6aFAhyylWKKmdtBba2aX2vjVj" target="_blank"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 3v13M6 11l6 6 6-6"/><path d="M3 20h18"/></svg>贊助企劃書</a>
+      <a class="ha-dl" href="https://drive.google.com/uc?export=download&confirm=t&id=14RYz95QWA9p_F6eHmVKF2A8KhhKXJnUr" target="_blank"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 3v13M6 11l6 6 6-6"/><path d="M3 20h18"/></svg>ONE 成果報告</a>
+    </div>
+  </div>
+  <div class="scroll-hint">
+    <span>探索更多</span>
+    <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+  </div>
+  <div id="ctrl">
+    <button class="ckbtn active" style="background:#cc1a1a" title="朱砂紅" onclick="selColor(0,this)"></button>
+    <button class="ckbtn" style="background:#c05808" title="橘紅" onclick="selColor(1,this)"></button>
+    <button class="ckbtn" style="background:#a89a04" title="藤黃" onclick="selColor(2,this)"></button>
+    <button class="ckbtn" style="background:#0e9e22" title="石綠" onclick="selColor(3,this)"></button>
+    <button class="ckbtn" style="background:#0878c0" title="青花藍" onclick="selColor(4,this)"></button>
+    <button class="ckbtn" style="background:#1010c8" title="群青" onclick="selColor(5,this)"></button>
+    <button class="ckbtn" style="background:#9010c0" title="紫墨" onclick="selColor(6,this)"></button>
+    <div class="cdiv"></div>
+    <button class="ibtn active" id="autoBtn" onclick="toggleAuto()">⏸ 自動</button>
+    <button class="ibtn" onclick="clearInk()">清空</button>
+  </div>
+</div>
+
+<!-- Float CTA -->
+<div id="float-cta">
+  <button onclick="openEntry()">立即申請贊助 →</button>
+</div>
+
+<!-- ══ SECTION 1: Story ══ -->
+<section id="sec-story">
+  <div>
+    <div class="sec-label reveal">關於我們</div>
+    <h2 class="sec-title reveal">不只是比賽</h2>
+    <p class="sec-body reveal">曜日盃不是一場普通的羽球賽。這是台灣同志友善羽球社群花了整整一年籌備、九個社團共同相信的事情。</p>
+    <p class="sec-body reveal" style="margin-top:14px">每一次對決都是一段故事，每一個在場的人都是見證者。我們要做的，是讓這樣的比賽一屆比一屆更好。</p>
+    <p class="sec-body reveal" style="margin-top:14px">TWO，是延續，也是進化。2026 年 8 月 15 日，我們以更完整的制度再次召集台灣各地頂尖好手。</p>
+    <div class="story-tags reveal">
+      <span class="stag">同志友善</span><span class="stag">邀請制賽事</span><span class="stag">九大社群</span><span class="stag">大安運動中心</span>
+    </div>
+  </div>
+  <div class="story-visual">
+    <div class="sv-item reveal reveal-d1"><div class="sv-n">108</div><div class="sv-d">嚴選隊伍</div></div>
+    <div class="sv-item reveal reveal-d2"><div class="sv-n">9</div><div class="sv-d">社群聯動</div></div>
+    <div class="sv-item reveal reveal-d3" style="grid-column:span 2;padding:24px 20px">
+      <div class="sv-n" style="font-size:clamp(14px,2vw,18px);line-height:1.75;font-weight:700;margin-bottom:6px">光芒薈萃，以球相聚</div>
+      <div class="sv-d">打造同志友善最高規格羽球競技殿堂</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ SECTION 2: Data ══ -->
+<section id="sec-data">
+  <div class="sec-label reveal">過往成果</div>
+  <h2 class="sec-title reveal">SOLAR CUP ONE · 2025</h2>
+  <p class="sec-body reveal">首屆曜日盃在臺北市大安運動中心落幕。<br>每一個數字背後，都是真實存在的熱情與記憶。</p>
+  <div class="data-grid">
+    <div class="dg-item reveal reveal-d1"><div class="dg-n" data-count="500" data-suffix="+">0</div><div class="dg-d">參與人次</div></div>
+    <div class="dg-item reveal reveal-d2"><div class="dg-n" data-count="285" data-suffix="+">0</div><div class="dg-d">激戰場次</div></div>
+    <div class="dg-item reveal reveal-d3"><div class="dg-n" data-count="8" data-suffix="萬+">0</div><div class="dg-d">活動觸及</div></div>
+    <div class="dg-item reveal reveal-d1"><div class="dg-n" data-count="5" data-suffix="萬+">0</div><div class="dg-d">社群互動</div></div>
+    <div class="dg-item reveal reveal-d2"><div class="dg-n" data-count="100" data-suffix="+">0</div><div class="dg-d">當日轉發</div></div>
+    <div class="dg-item reveal reveal-d3"><div class="dg-n" data-count="9" data-suffix="">0</div><div class="dg-d">大社團集結</div></div>
+  </div>
+  <div class="data-note reveal">曜日 · 薄薄 · 魄力 · 歡樂 · 大船 · 羽光 · 狸貓拳<br>九個社群的齊心，造就了這場難忘的盛典。</div>
+</section>
+
+<!-- ══ SECTION: Gallery ══ -->
+<section id="sec-gallery">
+  <div class="sec-label reveal">現場直擊</div>
+  <h2 class="sec-title reveal">SOLAR CUP ONE · 2025</h2>
+  <p class="sec-intro reveal">首屆曜日盃在大安運動中心落幕。285 場對決、500 名參與者，每一張照片，都是真實發生過的精彩。</p>
+  <div class="gallery-grid">
+    <div class="gp gp-wide reveal" onclick="openLb('images/photo-champion.jpg','曜日盃冠軍慶典')"><img src="images/photo-champion.jpg" alt="曜日盃冠軍慶典" loading="lazy" style="object-position:center center"></div>
+    <div class="gp gp-tall reveal reveal-d1" onclick="openLb('images/photo-jump.jpg','高速扣殺')"><img src="images/photo-jump.jpg" alt="高速扣殺" loading="lazy" style="object-position:center top"></div>
+    <div class="gp reveal reveal-d2" onclick="openLb('images/photo-doubles.jpg','雙打激戰')"><img src="images/photo-doubles.jpg" alt="雙打激戰" loading="lazy"></div>
+    <div class="gp reveal reveal-d3" onclick="openLb('images/photo-court.jpg','賽場全景')"><img src="images/photo-court.jpg" alt="賽場全景" loading="lazy"></div>
+    <div class="gp gp-wide reveal" onclick="openLb('images/photo-rally.jpg','精彩對決')"><img src="images/photo-rally.jpg" alt="精彩對決" loading="lazy"></div>
+    <div class="gp reveal reveal-d1" onclick="openLb('images/photo-team.jpg','主辦熱情')"><img src="images/photo-team.jpg" alt="主辦熱情" loading="lazy"></div>
+    <div class="gp reveal reveal-d2" onclick="openLb('images/photo-action.jpg','慶祝瞬間')"><img src="images/photo-action.jpg" alt="慶祝瞬間" loading="lazy"></div>
+    <div class="gp gp-wide reveal reveal-d3" onclick="openLb('images/photo-award.jpg','頒獎典禮')"><img src="images/photo-award.jpg" alt="頒獎典禮" loading="lazy" style="object-position:center 35%"></div>
+  </div>
+  <div class="gallery-credit reveal">Photo · Solar Cup One 2025 · Photography by 桑衫學</div>
+</section>
+
+<!-- ══ SECTION 3: Why ══ -->
+<section id="sec-why">
+  <div class="why-intro">
+    <div class="sec-label reveal">贊助價值</div>
+    <h2 class="sec-title reveal">你的贊助，<br>不只是一行 LOGO</h2>
+    <p class="sec-body reveal">500+ 位熱情運動者面前的真實存在感，是廣告投放換不來的。曜日盃讓你的品牌進入一個有溫度的社群，以最自然的方式被記住。</p>
+  </div>
+  <div class="why-grid">
+    <div class="wg-item reveal reveal-d1">
+      <div class="wg-icon">📣</div>
+      <div class="wg-num">8 萬+</div>
+      <div class="wg-title">真實觸及</div>
+      <div class="wg-body">現場 500+ 人次出席，線上 8 萬+ 觸及。你的品牌在每一個人的視野裡真實存在，不是演算法分配的冷冰冰曝光。</div>
+    </div>
+    <div class="wg-item reveal reveal-d2">
+      <div class="wg-icon">🌈</div>
+      <div class="wg-num">9 社群</div>
+      <div class="wg-title">社群認同</div>
+      <div class="wg-body">台灣九大同志友善羽球社群的核心場域。你的出現是一種立場，也是最有溫度的品牌投資——被記住的不只是名字，而是態度。</div>
+    </div>
+    <div class="wg-item reveal reveal-d3">
+      <div class="wg-icon">📸</div>
+      <div class="wg-num">三階段</div>
+      <div class="wg-title">全程曝光</div>
+      <div class="wg-body">賽前社群預熱、賽中現場看板、賽後媒體回顧。秩序冊、制服、主視覺、口播致謝，全程陪你的品牌走完整個賽事。</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ SECTION 4: Plans ══ -->
+<section id="sec-plans">
+  <div class="sec-label reveal">贊助方案</div>
+  <h2 class="sec-title reveal">選擇您的合作方式</h2>
+  <p class="sec-body reveal">從初試到深度冠名，每個層級都有明確的曝光組合。名額有限，建議盡早確認。</p>
+  <div class="plans-grid">
+    <div class="plan-card bronze reveal reveal-d1">
+      <div class="plan-tier">銅級</div>
+      <div class="plan-price">NT$ 5,000</div>
+      <div class="plan-divider"></div>
+      <div class="plan-item">現場折價券 / 貼紙發放</div>
+      <div class="plan-item">秩序冊 / 成績單 LOGO 曝光</div>
+    </div>
+    <div class="plan-card silver reveal reveal-d2">
+      <div class="plan-tier">銀級</div>
+      <div class="plan-price">NT$ 8,000</div>
+      <div class="plan-divider"></div>
+      <div class="plan-item">現場折價券 / 貼紙發放</div>
+      <div class="plan-item">秩序冊 / 成績單 LOGO 曝光</div>
+      <div class="plan-item">社群感謝貼文佈達</div>
+    </div>
+    <div class="plan-card gold reveal reveal-d3">
+      <div class="plan-tier">金級</div>
+      <div class="plan-price">NT$ 10,000</div>
+      <div class="plan-divider"></div>
+      <div class="plan-item">現場折價券 / 貼紙發放</div>
+      <div class="plan-item">秩序冊 / 成績單 LOGO 曝光</div>
+      <div class="plan-item">社群感謝貼文佈達</div>
+      <div class="plan-item">背板 / 看板大型 LOGO</div>
+      <div class="plan-item">專業形象照 + Google Map</div>
+    </div>
+    <div class="plan-card naming reveal reveal-d4">
+      <div class="plan-badge">最高合作</div>
+      <div class="plan-tier">冠名</div>
+      <div class="plan-price">NT$ 50,000</div>
+      <div class="plan-divider"></div>
+      <div class="plan-item">全金級所有權益</div>
+      <div class="plan-item">制服 LOGO（500+ 人前動態曝光）</div>
+      <div class="plan-item">主視覺最大尺寸最顯著位置</div>
+      <div class="plan-item">賽事冠名 · 全天口播致謝</div>
+      <div class="plan-item">客製化賽後慶功宴</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ SECTION 5: Contact ══ -->
+<section id="sec-contact">
+  <div class="sec-label reveal">立即行動</div>
+  <h2 class="sec-title reveal">攜手打造<br>這場盛事</h2>
+  <p class="sec-body reveal">曜日盃 TWO 將在 2026 年 8 月 15 日登場。贊助名額有限，現在聯繫就是最好的時機。填寫申請後，2 個工作日內確認合作細節。</p>
+  <div class="contact-info reveal">
+    賽事總召 · 阿定<br>
+    <a href="tel:0933865506">0933-865506</a>&nbsp;&nbsp;·&nbsp;&nbsp;<a href="mailto:ives173@gmail.com">ives173@gmail.com</a>
+  </div>
+  <div class="contact-btns reveal">
+    <button class="cbtn-main cbtn-corp" onclick="openEntry()">企業贊助申請</button>
+    <button class="cbtn-main cbtn-pers" onclick="openPers()">個人贊助登記</button>
+  </div>
+  <div class="dl-row reveal">
+    <a class="cbtn-dl" href="https://drive.google.com/uc?export=download&confirm=t&id=19dxk_aN6aFAhyylWKKmdtBba2aX2vjVj" target="_blank"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v13M6 11l6 6 6-6"/><path d="M3 20h18"/></svg>下載贊助企劃書 PDF</a>
+    <a class="cbtn-dl" href="https://drive.google.com/uc?export=download&confirm=t&id=14RYz95QWA9p_F6eHmVKF2A8KhhKXJnUr" target="_blank"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v13M6 11l6 6 6-6"/><path d="M3 20h18"/></svg>下載 ONE 成果展示 PDF</a>
+  </div>
+  <div class="urgency-note reveal">名額有限 · 先到先得 · 歡迎洽詢</div>
+</section>
+
+<!-- ══ MODALS ══ -->
+<div class="mbg" id="m-entry">
+  <div class="mbox">
+    <button class="mclose" onclick="closeAll()">×</button>
+    <div class="mtitle">贊助曜日盃 TWO</div>
+    <div class="mdesc">2026 年 8 月 15 日 · 臺北市大安運動中心<br>選擇您的身份，攜手打造這場盛事。</div>
+    <div class="plans-mini">
+      <div class="pm bronze"><div class="pm-name">銅級</div><div class="pm-price">NT$ 5,000</div></div>
+      <div class="pm silver"><div class="pm-name">銀級</div><div class="pm-price">NT$ 8,000</div></div>
+      <div class="pm gold"><div class="pm-name">金級</div><div class="pm-price">NT$ 10,000</div></div>
+      <div class="pm naming"><div class="pm-name">冠名</div><div class="pm-price">NT$ 50,000</div></div>
+    </div>
+    <div class="entry-grid">
+      <div class="ech" onclick="openCorp()"><div class="ech-icon">🏢</div><div class="ech-title">企業贊助</div><div class="ech-sub">品牌曝光合作<br>5,000 — 50,000 元</div></div>
+      <div class="ech" onclick="openPers()"><div class="ech-icon">🏸</div><div class="ech-title">個人贊助</div><div class="ech-sub">用熱情支持賽事<br>金額不限</div></div>
+    </div>
+  </div>
+</div>
+<div class="mbg" id="m-corp">
+  <div class="mbox">
+    <button class="mclose" onclick="closeAll()">×</button>
+    <div class="mtitle">企業贊助申請</div>
+    <div class="mdesc">填寫後將於 2 個工作日內聯繫確認合作細節。</div>
+    <div id="corp-body">
+      <div class="fg"><label class="fl">公司 / 品牌名稱<span class="req">*</span></label><input class="fi" id="c-co" placeholder="例：光芒羽球用品"><div class="ferr" id="e-co"></div></div>
+      <div class="fg"><label class="fl">聯絡人姓名<span class="req">*</span></label><input class="fi" id="c-nm" placeholder="您的姓名"><div class="ferr" id="e-nm"></div></div>
+      <div class="fg"><label class="fl">聯絡電話<span class="req">*</span></label><input class="fi" id="c-ph" type="tel" placeholder="09xxxxxxxx"><div class="ferr" id="e-ph"></div></div>
+      <div class="fg"><label class="fl">電子信箱</label><input class="fi" id="c-em" type="email" placeholder="example@company.com"><div class="ferr" id="e-em"></div></div>
+      <div class="fg"><label class="fl">LINE ID</label><input class="fi" id="c-li" placeholder="LINE ID（選填）"></div>
+      <div class="fg">
+        <label class="fl">贊助等級<span class="req">*</span></label>
+        <div class="tier-opts">
+          <input type="radio" name="ctier" id="t1" value="銅級 5,000" class="tr" onchange="showTP()"><label for="t1"><span class="tn">銅級</span><span class="tp">NT$ 5,000</span></label>
+          <input type="radio" name="ctier" id="t2" value="銀級 8,000" class="tr" onchange="showTP()"><label for="t2"><span class="tn">銀級</span><span class="tp">NT$ 8,000</span></label>
+          <input type="radio" name="ctier" id="t3" value="金級 10,000" class="tr" onchange="showTP()"><label for="t3"><span class="tn">金級</span><span class="tp">NT$ 10,000</span></label>
+          <input type="radio" name="ctier" id="t4" value="冠名 50,000" class="tr" onchange="showTP()"><label for="t4"><span class="tn">冠名</span><span class="tp">NT$ 50,000</span></label>
+        </div>
+        <div id="tp"></div><div class="ferr" id="e-ti"></div>
+      </div>
+      <div class="fg"><label class="fl">備註</label><textarea class="ft" id="c-no" placeholder="其他說明或問題（選填）"></textarea></div>
+      <button class="fsub" id="c-sub" onclick="submitCorp()">提交企業贊助申請</button>
+    </div>
+    <div class="fsuc" id="corp-ok">
+      <div class="fsuc-icon">🎉</div><div class="fsuc-title">申請已送出！</div>
+      <div class="fsuc-desc">感謝您對曜日盃 TWO 的支持。<br>我們將在 2 個工作日內與您聯繫。<br><br>賽事總召 阿定 · 0933-865506</div>
+    </div>
+  </div>
+</div>
+<div class="mbg" id="m-pers">
+  <div class="mbox">
+    <button class="mclose" onclick="closeAll()">×</button>
+    <div class="mtitle">個人贊助登記</div>
+    <div class="mdesc">感謝您用個人的力量支持這場盛事！金額不設門檻，每份心意都珍惜。</div>
+    <div id="pers-body">
+      <div class="fg"><label class="fl">姓名<span class="req">*</span></label><input class="fi" id="p-nm" placeholder="您的姓名"><div class="ferr" id="e-pnm"></div></div>
+      <div class="fg"><label class="fl">手機號碼<span class="req">*</span></label><input class="fi" id="p-ph" type="tel" placeholder="09xxxxxxxx"><div class="ferr" id="e-pph"></div></div>
+      <div class="fg"><label class="fl">LINE ID<span class="req">*</span></label><input class="fi" id="p-li" placeholder="LINE ID"><div class="ferr" id="e-pli"></div></div>
+      <div class="fg"><label class="fl">是否為曜日成員<span class="req">*</span></label>
+        <select class="fs" id="p-mb"><option value="">請選擇</option><option value="是">是，我是曜日羽球團成員</option><option value="否">否，我是外部支持者</option></select>
+        <div class="ferr" id="e-pmb"></div>
+      </div>
+      <div class="fg"><label class="fl">贊助金額（元）</label><input class="fi" id="p-am" type="number" placeholder="自由輸入（選填）" min="0"></div>
+      <div class="fg"><label class="fl">備註</label><textarea class="ft" id="p-no" placeholder="留言或鼓勵的話（選填）"></textarea></div>
+      <button class="fsub" id="p-sub" onclick="submitPers()">提交個人贊助登記</button>
+    </div>
+    <div class="fsuc" id="pers-ok">
+      <div class="fsuc-icon">🏸</div><div class="fsuc-title">登記完成！</div>
+      <div class="fsuc-desc">謝謝您的支持，我們會盡快與您聯繫確認後續事宜。<br><br>賽事總召 阿定 · 0933-865506</div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ══ WebGL 水波紋 Ripple ══════════════════════════════════════
+(function(){
+const hero=document.getElementById('hero');
+const cv=document.getElementById('c');
+let gl=cv.getContext('webgl2');
+const isGL2=!!gl;
+if(!gl)gl=cv.getContext('webgl')||cv.getContext('experimental-webgl');
+if(!gl){cv.style.background='#f5f0e8';return;}
+if(isGL2)gl.getExtension('EXT_color_buffer_float');
+else{window._hf=gl.getExtension('OES_texture_half_float');gl.getExtension('OES_texture_half_float_linear');}
+const HALF=isGL2?gl.HALF_FLOAT:(window._hf?window._hf.HALF_FLOAT_OES:gl.UNSIGNED_BYTE);
+const SIM=256,DYE=512;
+
+const SV=`precision highp float;attribute vec2 a;varying vec2 vU;void main(){vU=a*.5+.5;gl_Position=vec4(a,0.,1.);}`;
+function mkP(f){
+  const vs=gl.createShader(gl.VERTEX_SHADER);gl.shaderSource(vs,SV);gl.compileShader(vs);
+  const fs=gl.createShader(gl.FRAGMENT_SHADER);gl.shaderSource(fs,f);gl.compileShader(fs);
+  const p=gl.createProgram();gl.attachShader(p,vs);gl.attachShader(p,fs);gl.linkProgram(p);return p;
+}
+
+// Wave step: .r = h(t), .g = h(t-1)  →  next .r = h(t+1), .g = h(t)
+const pWave=mkP(`precision highp float;
+varying vec2 vU;uniform sampler2D uW;uniform vec2 ts;
+void main(){
+  float c=texture2D(uW,vU).r,p=texture2D(uW,vU).g;
+  float L=texture2D(uW,vU-vec2(ts.x,0.)).r;
+  float R=texture2D(uW,vU+vec2(ts.x,0.)).r;
+  float T=texture2D(uW,vU+vec2(0.,ts.y)).r;
+  float B=texture2D(uW,vU-vec2(0.,ts.y)).r;
+  float next=(2.*c-p+0.45*(L+R+T+B-4.*c))*0.992;
+  gl_FragColor=vec4(next,c,0.,1.);
+}`);
+
+// Dye fade + gentle diffusion so color spreads with expanding ring
+const pFade=mkP(`precision highp float;
+varying vec2 vU;uniform sampler2D uD;uniform vec2 ts;
+void main(){
+  vec4 c=texture2D(uD,vU);
+  vec4 L=texture2D(uD,vU-vec2(ts.x,0.));
+  vec4 R=texture2D(uD,vU+vec2(ts.x,0.));
+  vec4 T=texture2D(uD,vU+vec2(0.,ts.y));
+  vec4 B=texture2D(uD,vU-vec2(0.,ts.y));
+  gl_FragColor=(c*0.9976+(L+R+T+B)*0.0006)*0.9990;
+}`);
+
+// Gaussian splat into any texture
+const pSplat=mkP(`precision highp float;
+varying vec2 vU;uniform sampler2D uT;uniform vec4 uC;uniform vec2 uP;uniform float uRad,uAsp;
+void main(){
+  vec2 p=vU-uP;p.x*=uAsp;
+  float s=exp(-dot(p,p)/uRad);
+  gl_FragColor=texture2D(uT,vU)+s*uC;
+}`);
+
+// Display: wave height + color stain → final pixel
+const pDisp=mkP(`precision highp float;
+varying vec2 vU;uniform sampler2D uW,uD;uniform vec2 uR;
+float rnd(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
+float ns(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(rnd(i),rnd(i+vec2(1,0)),f.x),mix(rnd(i+vec2(0,1)),rnd(i+vec2(1,1)),f.x),f.y);}
+float fbm(vec2 p){float v=0.,a=.5;for(int i=0;i<4;i++){v+=a*ns(p);p*=2.1;a*=.5;}return v;}
+void main(){
+  float macro=fbm(vU*uR*.004+vec2(.31,.73));
+  vec3 base=vec3(.961,.941,.910)*(0.90+.07*macro);
+
+  // Wave height & surface gradient
+  vec2 wts=vec2(1./256.);
+  float h=texture2D(uW,vU).r;
+  float hL=texture2D(uW,vU-vec2(wts.x,0.)).r;
+  float hR=texture2D(uW,vU+vec2(wts.x,0.)).r;
+  float hT=texture2D(uW,vU+vec2(0.,wts.y)).r;
+  float hB=texture2D(uW,vU-vec2(0.,wts.y)).r;
+  vec2 grad=vec2(hR-hL,hT-hB);
+  float gradMag=length(grad);
+
+  // Color stain
+  vec3 col=texture2D(uD,vU).rgb;
+  float colMass=dot(col,vec3(.333,.333,.334));
+  vec3 hue=colMass>0.001?col/max(colMass,0.001):vec3(1.);
+
+  // Ring = bright colored band where surface gradient is steep
+  float ring=clamp(gradMag*11.0,0.,1.);
+  float crest=clamp(h*7.,0.,1.);
+  float trough=clamp(-h*7.,0.,1.);
+
+  // Fake specular from surface normal
+  vec3 normal=normalize(vec3(-grad*4.,1.));
+  float spec=pow(max(dot(normal,normalize(vec3(-.5,-.7,1.5))),0.),28.);
+
+  vec3 result=base;
+  result=mix(result,hue*0.80,ring*clamp(colMass*5.,0.,0.68));
+  result+=hue*crest*colMass*0.22;
+  result-=vec3(trough*0.07);
+  result+=vec3(spec*0.48)*clamp(colMass*4.,0.,1.);
+
+  vec2 uv2=vU-.5;
+  result*=clamp(1.-dot(uv2,uv2)*1.85,.62,1.);
+  gl_FragColor=vec4(clamp(result,0.,1.),1.);
+}`);
+
+const qB=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,qB);
+gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,1,1]),gl.STATIC_DRAW);
+function bQ(p){const l=gl.getAttribLocation(p,'a');gl.bindBuffer(gl.ARRAY_BUFFER,qB);gl.enableVertexAttribArray(l);gl.vertexAttribPointer(l,2,gl.FLOAT,false,0,0);}
+function u1i(p,n,v){gl.uniform1i(gl.getUniformLocation(p,n),v);}
+function u2f(p,n,x,y){gl.uniform2f(gl.getUniformLocation(p,n),x,y);}
+function u4f(p,n,x,y,z,w){gl.uniform4f(gl.getUniformLocation(p,n),x,y,z,w);}
+function bT(s,t){gl.activeTexture(gl.TEXTURE0+s);gl.bindTexture(gl.TEXTURE_2D,t);}
+
+const RGi=isGL2?gl.RG16F:gl.RGBA,RGf=isGL2?gl.RG:gl.RGBA;
+const RGBAi=isGL2?gl.RGBA16F:gl.RGBA;
+function mkFBO(w,h,ifmt,fmt,type,filter){
+  gl.activeTexture(gl.TEXTURE0);const tex=gl.createTexture();gl.bindTexture(gl.TEXTURE_2D,tex);
+  gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,filter);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,filter);
+  gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);
+  gl.texImage2D(gl.TEXTURE_2D,0,ifmt,w,h,0,fmt,type,null);
+  const fbo=gl.createFramebuffer();gl.bindFramebuffer(gl.FRAMEBUFFER,fbo);
+  gl.framebufferTexture2D(gl.FRAMEBUFFER,gl.COLOR_ATTACHMENT0,gl.TEXTURE_2D,tex,0);
+  gl.viewport(0,0,w,h);gl.clear(gl.COLOR_BUFFER_BIT);return{tex,fbo,w,h};
+}
+function mkDbl(w,h,ifmt,fmt,type,filter){
+  const r=mkFBO(w,h,ifmt,fmt,type,filter),wr=mkFBO(w,h,ifmt,fmt,type,filter);
+  return{read:r,write:wr,swap(){const t=this.read;this.read=this.write;this.write=t;}};
+}
+function blit(fbo){gl.bindFramebuffer(gl.FRAMEBUFFER,fbo?fbo.fbo:null);gl.viewport(0,0,fbo?fbo.w:cv.width,fbo?fbo.h:cv.height);gl.drawArrays(gl.TRIANGLE_STRIP,0,4);}
+
+let wave=mkDbl(SIM,SIM,RGi,RGf,HALF,gl.LINEAR);
+let dye=mkDbl(DYE,DYE,RGBAi,gl.RGBA,HALF,gl.LINEAR);
+
+function resize(){cv.width=hero.offsetWidth;cv.height=hero.offsetHeight;}
+resize();window.addEventListener('resize',resize);
+
+const COLORS=[
+  [0.72,0.03,0.03],[0.68,0.28,0.02],[0.56,0.52,0.02],
+  [0.02,0.58,0.10],[0.02,0.44,0.66],[0.06,0.04,0.72],[0.50,0.02,0.64],
+];
+let curC=0,autoPlay=true,lastAT=0,dropIdx=0;
+
+function dropAt(x,y){
+  const asp=cv.width/cv.height;
+  const px=x/cv.width,py=1-y/cv.height;
+  gl.disable(gl.BLEND);
+  gl.useProgram(pSplat);bQ(pSplat);
+  // Wave: inject same height into r (current) and g (previous) → zero initial velocity
+  bT(0,wave.read.tex);u1i(pSplat,'uT',0);
+  u4f(pSplat,'uC',1.1,1.1,0.,0.);
+  u2f(pSplat,'uP',px,py);gl.uniform1f(gl.getUniformLocation(pSplat,'uRad'),0.0007);gl.uniform1f(gl.getUniformLocation(pSplat,'uAsp'),asp);
+  blit(wave.write);wave.swap();
+  // Color stain: large soft blob so the ring travels through colored water
+  const c=COLORS[curC];
+  bT(0,dye.read.tex);u1i(pSplat,'uT',0);
+  u4f(pSplat,'uC',c[0]*0.62,c[1]*0.62,c[2]*0.62,0.);
+  u2f(pSplat,'uP',px,py);gl.uniform1f(gl.getUniformLocation(pSplat,'uRad'),0.09);gl.uniform1f(gl.getUniformLocation(pSplat,'uAsp'),asp);
+  blit(dye.write);dye.swap();
+}
+
+const AUTO_PTS=[
+  {x:.18,y:.35},{x:.5,y:.28},{x:.82,y:.35},
+  {x:.1,y:.62},{x:.5,y:.68},{x:.9,y:.62},
+  {x:.28,y:.5},{x:.72,y:.5},{x:.15,y:.18},{x:.85,y:.18},
+];
+
+let heroVis=true;
+const obs=new IntersectionObserver(([e])=>heroVis=e.isIntersecting,{threshold:0.01});
+obs.observe(hero);
+
+function render(t){
+  if(heroVis){
+    if(autoPlay&&t-lastAT>2800){
+      lastAT=t;
+      const pt=AUTO_PTS[dropIdx%AUTO_PTS.length];
+      curC=dropIdx%COLORS.length;
+      dropIdx++;
+      dropAt(pt.x*cv.width,pt.y*cv.height);
+    }
+    gl.disable(gl.BLEND);
+    // Wave propagation step
+    gl.useProgram(pWave);bQ(pWave);
+    u2f(pWave,'ts',1/SIM,1/SIM);
+    bT(0,wave.read.tex);u1i(pWave,'uW',0);
+    blit(wave.write);wave.swap();
+    // Color fade + diffuse
+    gl.useProgram(pFade);bQ(pFade);
+    bT(0,dye.read.tex);u1i(pFade,'uD',0);
+    u2f(pFade,'ts',1/DYE,1/DYE);
+    blit(dye.write);dye.swap();
+    // Render to screen
+    gl.viewport(0,0,cv.width,cv.height);gl.bindFramebuffer(gl.FRAMEBUFFER,null);
+    gl.useProgram(pDisp);bQ(pDisp);
+    bT(0,wave.read.tex);u1i(pDisp,'uW',0);
+    bT(1,dye.read.tex);u1i(pDisp,'uD',1);
+    u2f(pDisp,'uR',cv.width,cv.height);
+    gl.drawArrays(gl.TRIANGLE_STRIP,0,4);
+  }
+  requestAnimationFrame(render);
+}
+requestAnimationFrame(render);
+
+// Click / tap to drop
+cv.addEventListener('click',e=>{
+  if(!heroVis)return;
+  dropAt(e.clientX,e.clientY);
+  curC=(curC+1)%COLORS.length;
+  document.querySelectorAll('.ckbtn').forEach((b,i)=>b.classList.toggle('active',i===curC));
+});
+cv.addEventListener('touchstart',e=>{
+  e.preventDefault();
+  for(const t of e.changedTouches){dropAt(t.clientX,t.clientY);curC=(curC+1)%COLORS.length;}
+},{passive:false});
+
+window.clearInk=function(){
+  [wave.read,wave.write,dye.read,dye.write].forEach(f=>{
+    gl.bindFramebuffer(gl.FRAMEBUFFER,f.fbo);gl.viewport(0,0,f.w,f.h);gl.clear(gl.COLOR_BUFFER_BIT);
+  });
+};
+window.selColor=function(i,btn){curC=i;document.querySelectorAll('.ckbtn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');};
+window.toggleAuto=function(){autoPlay=!autoPlay;const b=document.getElementById('autoBtn');b.textContent=autoPlay?'⏸ 自動':'▶ 自動';b.classList.toggle('active',autoPlay);};
+})();
+
+// ══ Scroll Animations ════════════════════════════════════
+(function(){
+// Float CTA
+const hero=document.getElementById('hero');
+const floatCTA=document.getElementById('float-cta');
+new IntersectionObserver(([e])=>floatCTA.classList.toggle('show',!e.isIntersecting),{threshold:0.15}).observe(hero);
+
+// Reveal on scroll
+const revObs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in');});
+},{threshold:0.12});
+document.querySelectorAll('.reveal').forEach(el=>revObs.observe(el));
+
+// Count-up for stats
+const countObs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(!e.isIntersecting)return;
+    countObs.unobserve(e.target);
+    const el=e.target;
+    const target=parseInt(el.dataset.count,10);
+    const suffix=el.dataset.suffix||'';
+    const duration=1600;
+    let start=null;
+    function step(ts){
+      if(!start)start=ts;
+      const p=Math.min((ts-start)/duration,1);
+      const ease=1-Math.pow(1-p,3);
+      el.textContent=Math.floor(ease*target)+suffix;
+      if(p<1)requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  });
+},{threshold:0.4});
+document.querySelectorAll('.dg-n[data-count]').forEach(el=>countObs.observe(el));
+})();
+
+// ══ Tier benefits ════════════════════════════════════════
+const TB={
+  '銅級 5,000':'✓ 現場折價券 / 貼紙發放\n✓ 秩序冊 / 成績單 LOGO',
+  '銀級 8,000':'✓ 現場折價券 / 貼紙發放\n✓ 秩序冊 / 成績單 LOGO\n✓ 社群感謝貼文佈達',
+  '金級 10,000':'✓ 現場折價券 / 貼紙發放\n✓ 秩序冊 / 成績單 LOGO\n✓ 社群感謝貼文佈達\n✓ 背板 / 看板 LOGO（大型實體曝光）\n✓ 專業形象照 + Google Map 在地化',
+  '冠名 50,000':'★ 全金級權益\n★ LOGO 印製工作人員制服（500+ 人前動態曝光）\n★ 主視覺最大尺寸最顯著位置\n★ 賽事冠名 + 主持人全天口播致謝\n★ 客製化賽後慶功宴 / 專屬聚餐',
+};
+window.showTP=function(){const s=document.querySelector('input[name="ctier"]:checked');const b=document.getElementById('tp');if(s){b.innerHTML=TB[s.value].split('\n').map(l=>`<div>${l}</div>`).join('');b.classList.add('show');}else b.classList.remove('show');};
+
+// ══ Modal controls ════════════════════════════════════════
+function closeAll(){document.querySelectorAll('.mbg').forEach(m=>m.classList.remove('open'));document.body.style.overflow='';}
+window.closeAll=closeAll;
+window.openEntry=function(){closeAll();document.getElementById('m-entry').classList.add('open');document.body.style.overflow='hidden';};
+window.openCorp=function(){document.getElementById('m-entry').classList.remove('open');document.getElementById('m-corp').classList.add('open');};
+window.openPers=function(){const e=document.getElementById('m-entry');if(e)e.classList.remove('open');document.getElementById('m-pers').classList.add('open');document.body.style.overflow='hidden';};
+document.querySelectorAll('.mbg').forEach(b=>b.addEventListener('click',e=>{if(e.target===b)closeAll();}));
+
+// ══ Form submit ══════════════════════════════════════════
+const EP='https://script.google.com/macros/s/AKfycbyW62jOC4olpv8aeb4XsF6ryTySu9UtXukWq49nuecQ8-afyNC0YOTzR5SSg8c2400d0Q/exec';
+function setErr(id,msg){const e=document.getElementById(id);if(!e)return;e.textContent=msg;e.classList.toggle('show',!!msg);}
+function clrErr(...ids){ids.forEach(id=>setErr(id,''));}
+
+window.submitCorp=async function(){
+  clrErr('e-co','e-nm','e-ph','e-em','e-ti');
+  const co=document.getElementById('c-co').value.trim(),nm=document.getElementById('c-nm').value.trim(),ph=document.getElementById('c-ph').value.trim(),em=document.getElementById('c-em').value.trim(),li=document.getElementById('c-li').value.trim(),ti=document.querySelector('input[name="ctier"]:checked'),no=document.getElementById('c-no').value.trim();
+  let ok=true;
+  if(!co){setErr('e-co','公司名稱為必填');ok=false;}
+  if(!nm){setErr('e-nm','聯絡人姓名為必填');ok=false;}
+  if(!ph||!/^09\d{8}$/.test(ph)){setErr('e-ph','請輸入正確的手機號碼（09xxxxxxxx）');ok=false;}
+  if(em&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)){setErr('e-em','信箱格式有誤');ok=false;}
+  if(!ti){setErr('e-ti','請選擇贊助等級');ok=false;}
+  if(!ok)return;
+  const btn=document.getElementById('c-sub');btn.disabled=true;btn.textContent='送出中…';
+  try{
+    const res=await fetch(EP,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({type:'corporate',公司名稱:co,聯絡人:nm,電話:ph,Email:em,LINE_ID:li,贊助等級:ti.value,備註:no})});
+    const j=JSON.parse(await res.text());
+    if(j.result==='success'||j.result==='duplicate'){document.getElementById('corp-body').style.display='none';document.getElementById('corp-ok').classList.add('show');}
+    else throw new Error(j.message||'送出失敗');
+  }catch(e){btn.disabled=false;btn.textContent='提交企業贊助申請';alert('送出失敗，請直接聯繫阿定 0933-865506\n\n'+e.message);}
+};
+
+window.submitPers=async function(){
+  clrErr('e-pnm','e-pph','e-pli','e-pmb');
+  const nm=document.getElementById('p-nm').value.trim(),ph=document.getElementById('p-ph').value.trim(),li=document.getElementById('p-li').value.trim(),mb=document.getElementById('p-mb').value,am=document.getElementById('p-am').value.trim(),no=document.getElementById('p-no').value.trim();
+  let ok=true;
+  if(!nm){setErr('e-pnm','姓名為必填');ok=false;}
+  if(!ph||!/^09\d{8}$/.test(ph)){setErr('e-pph','請輸入正確的手機號碼');ok=false;}
+  if(!li){setErr('e-pli','LINE ID 為必填');ok=false;}
+  if(!mb){setErr('e-pmb','請選擇是否為曜日成員');ok=false;}
+  if(!ok)return;
+  const btn=document.getElementById('p-sub');btn.disabled=true;btn.textContent='送出中…';
+  try{
+    const res=await fetch(EP,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({type:'personal',姓名:nm,手機:ph,LINE_ID:li,是否曜日成員:mb,贊助金額:am,備註:no})});
+    const j=JSON.parse(await res.text());
+    if(j.result==='success'||j.result==='duplicate'){document.getElementById('pers-body').style.display='none';document.getElementById('pers-ok').classList.add('show');}
+    else throw new Error(j.message||'送出失敗');
+  }catch(e){btn.disabled=false;btn.textContent='提交個人贊助登記';alert('送出失敗，請直接聯繫阿定 0933-865506\n\n'+e.message);}
+};
+</script>
+
+<!-- Lightbox -->
+<div id="lb" onclick="if(event.target===this)closeLb()">
+  <div id="lb-inner">
+    <img id="lb-img" src="" alt="">
+    <button id="lb-close" onclick="closeLb()">✕</button>
+  </div>
+</div>
+<script>
+function openLb(src,alt){
+  const img=document.getElementById('lb-img');
+  img.src=src; img.alt=alt||'';
+  document.getElementById('lb').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeLb(){
+  document.getElementById('lb').classList.remove('open');
+  document.body.style.overflow='';
+}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeLb()});
+</script>
+</body>
+</html>
