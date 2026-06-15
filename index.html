@@ -2,7 +2,7 @@
 <html lang="zh-TW">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>2026 曜日盃 TWO — 贊助募集</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700;900&family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
@@ -28,13 +28,13 @@ body{font-family:'Noto Sans TC',sans-serif;background:#f5f0e8;color:#1a1a2e}
 .ha-primary:hover{background:#2a2a4e;transform:translateY(-2px)}
 .ha-secondary{padding:10px 22px;background:rgba(255,255,255,.22);color:rgba(26,26,46,.65);border:1px solid rgba(26,26,46,.2);border-radius:99px;font-size:13px;cursor:pointer;font-family:'Noto Sans TC',sans-serif;letter-spacing:.06em;transition:all .2s;outline:none;backdrop-filter:blur(8px);text-decoration:none;display:inline-flex;align-items:center}
 .ha-secondary:hover{background:rgba(255,255,255,.35);transform:translateY(-2px)}
-.scroll-hint{position:absolute;bottom:74px;left:50%;transform:translateX(-50%);z-index:2;display:flex;flex-direction:column;align-items:center;gap:5px;opacity:.35;animation:bounce 2.4s ease-in-out infinite;pointer-events:none}
+.scroll-hint{position:absolute;bottom:calc(74px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);z-index:2;display:flex;flex-direction:column;align-items:center;gap:5px;opacity:.35;animation:bounce 2.4s ease-in-out infinite;pointer-events:none}
 .scroll-hint span{font-size:10px;letter-spacing:.2em;color:#1a1a2e}
 .scroll-hint svg{width:17px;height:17px;fill:none;stroke:#1a1a2e;stroke-width:1.8}
 @keyframes bounce{0%,100%{transform:translateX(-50%) translateY(0)}55%{transform:translateX(-50%) translateY(8px)}}
 
 /* ── Ctrl bar ── */
-#ctrl{position:absolute;bottom:15px;left:50%;transform:translateX(-50%);z-index:100;display:flex;align-items:center;gap:8px;padding:8px 14px;background:rgba(14,12,10,.82);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-radius:99px;border:1px solid rgba(255,255,255,.08);box-shadow:0 8px 28px rgba(0,0,0,.28);user-select:none;white-space:nowrap}
+#ctrl{position:absolute;bottom:calc(15px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);z-index:100;display:flex;align-items:center;gap:8px;padding:8px 14px;background:rgba(14,12,10,.82);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-radius:99px;border:1px solid rgba(255,255,255,.08);box-shadow:0 8px 28px rgba(0,0,0,.28);user-select:none;white-space:nowrap}
 .cdiv{width:1px;height:15px;background:rgba(255,255,255,.12);flex-shrink:0}
 .ckbtn{width:19px;height:19px;border-radius:50%;border:2.5px solid transparent;cursor:pointer;transition:transform .18s,border-color .18s;flex-shrink:0;outline:none}
 .ckbtn:hover{transform:scale(1.2)}
@@ -44,7 +44,7 @@ body{font-family:'Noto Sans TC',sans-serif;background:#f5f0e8;color:#1a1a2e}
 .ibtn.active{background:rgba(255,255,255,.12);color:#fff}
 
 /* ── Float CTA ── */
-#float-cta{position:fixed;bottom:24px;right:24px;z-index:150;opacity:0;transform:translateY(10px);transition:opacity .4s,transform .4s;pointer-events:none}
+#float-cta{position:fixed;bottom:calc(24px + env(safe-area-inset-bottom));right:calc(24px + env(safe-area-inset-right));z-index:150;opacity:0;transform:translateY(10px);transition:opacity .4s,transform .4s;pointer-events:none}
 #float-cta.show{opacity:1;transform:none;pointer-events:auto}
 #float-cta button{padding:13px 24px;background:#1a1a2e;color:#c9aa6a;border:none;border-radius:99px;font-size:13.5px;font-weight:700;cursor:pointer;font-family:'Noto Serif TC',serif;letter-spacing:.06em;box-shadow:0 8px 28px rgba(0,0,0,.28);transition:background .2s,transform .2s}
 #float-cta button:hover{background:#2a2a4e;transform:translateY(-2px)}
@@ -246,7 +246,7 @@ section{padding:80px 8vw}
   .dl-row{flex-direction:column;align-items:center}
   .cbtn-dl{width:100%;max-width:280px;justify-content:center}
   /* Float CTA */
-  #float-cta{bottom:16px;right:14px}
+  #float-cta{bottom:calc(16px + env(safe-area-inset-bottom));right:calc(14px + env(safe-area-inset-right))}
   #float-cta button{padding:11px 18px;font-size:12.5px}
   /* Modal */
   .mbox{padding:24px 18px;border-radius:16px}
