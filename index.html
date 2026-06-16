@@ -543,7 +543,7 @@ if(!gl){cv.style.background='#f5f0e8';return;}
 if(isGL2)gl.getExtension('EXT_color_buffer_float');
 else{window._hf=gl.getExtension('OES_texture_half_float');gl.getExtension('OES_texture_half_float_linear');}
 const HALF=isGL2?gl.HALF_FLOAT:(window._hf?window._hf.HALF_FLOAT_OES:gl.UNSIGNED_BYTE);
-const SIM=256,DYE=512;
+const SIM=256,DYE=1024;
 
 const SV=`precision highp float;attribute vec2 a;varying vec2 vU;void main(){vU=a*.5+.5;gl_Position=vec4(a,0.,1.);}`;
 function mkP(f){
@@ -554,27 +554,41 @@ function mkP(f){
 
 // Wave step: .r = h(t), .g = h(t-1)  →  next .r = h(t+1), .g = h(t)
 const pWave=mkP(`precision highp float;
-varying vec2 vU;uniform sampler2D uW;uniform vec2 ts;
+varying vec2 vU;uniform sampler2D uW;uniform vec2 ts;uniform vec2 aniso;
 void main(){
   float c=texture2D(uW,vU).r,p=texture2D(uW,vU).g;
-  float L=texture2D(uW,vU-vec2(ts.x,0.)).r;
-  float R=texture2D(uW,vU+vec2(ts.x,0.)).r;
-  float T=texture2D(uW,vU+vec2(0.,ts.y)).r;
-  float B=texture2D(uW,vU-vec2(0.,ts.y)).r;
-  float next=(2.*c-p+0.45*(L+R+T+B-4.*c))*0.992;
+  vec2 L2=vU-vec2(ts.x,0.),R2=vU+vec2(ts.x,0.),T2=vU+vec2(0.,ts.y),B2=vU-vec2(0.,ts.y);
+  float L=texture2D(uW,L2).r;
+  float R=texture2D(uW,R2).r;
+  float T=texture2D(uW,T2).r;
+  float B=texture2D(uW,B2).r;
+  // 反射邊界：波撞到邊緣鏡射彈回（池壁反彈）
+  if(L2.x<0.0)L=texture2D(uW,R2).r;
+  if(R2.x>1.0)R=texture2D(uW,L2).r;
+  if(T2.y>1.0)T=texture2D(uW,B2).r;
+  if(B2.y<0.0)B=texture2D(uW,T2).r;
+  float lap=aniso.x*(L+R-2.*c)+aniso.y*(T+B-2.*c);
+  float next=(2.*c-p+0.47*lap)*0.9955;
   gl_FragColor=vec4(next,c,0.,1.);
 }`);
 
 // Dye fade + gentle diffusion so color spreads with expanding ring
 const pFade=mkP(`precision highp float;
-varying vec2 vU;uniform sampler2D uD;uniform vec2 ts;
+varying vec2 vU;uniform sampler2D uD;uniform sampler2D uW;uniform vec2 ts;uniform vec2 wts;uniform float k;
 void main(){
-  vec4 c=texture2D(uD,vU);
-  vec4 L=texture2D(uD,vU-vec2(ts.x,0.));
-  vec4 R=texture2D(uD,vU+vec2(ts.x,0.));
-  vec4 T=texture2D(uD,vU+vec2(0.,ts.y));
-  vec4 B=texture2D(uD,vU-vec2(0.,ts.y));
-  gl_FragColor=(c*0.9976+(L+R+T+B)*0.0006)*0.9990;
+  // 由波高梯度導出流速，讓顏色順著漣漪的坡度流動（半拉格朗日回溯取樣）
+  float hL=texture2D(uW,vU-vec2(wts.x,0.)).r;
+  float hR=texture2D(uW,vU+vec2(wts.x,0.)).r;
+  float hT=texture2D(uW,vU+vec2(0.,wts.y)).r;
+  float hB=texture2D(uW,vU-vec2(0.,wts.y)).r;
+  vec2 vel=vec2(hR-hL,hT-hB)*k;
+  vec2 coord=vU-vel;
+  vec4 c=texture2D(uD,coord);
+  vec4 L=texture2D(uD,coord-vec2(ts.x,0.));
+  vec4 R=texture2D(uD,coord+vec2(ts.x,0.));
+  vec4 T=texture2D(uD,coord+vec2(0.,ts.y));
+  vec4 B=texture2D(uD,coord-vec2(0.,ts.y));
+  gl_FragColor=(c*0.9978+(L+R+T+B)*0.0005)*0.9991;
 }`);
 
 // Gaussian splat into any texture
@@ -709,12 +723,19 @@ function render(t){
     // Wave propagation step
     gl.useProgram(pWave);bQ(pWave);
     u2f(pWave,'ts',1/SIM,1/SIM);
+    let _ax=1,_ay=1;
+    if(cv.width>cv.height){_ax=(cv.height*cv.height)/(cv.width*cv.width);}
+    else{_ay=(cv.width*cv.width)/(cv.height*cv.height);}
+    u2f(pWave,'aniso',_ax,_ay);
     bT(0,wave.read.tex);u1i(pWave,'uW',0);
     blit(wave.write);wave.swap();
     // Color fade + diffuse
     gl.useProgram(pFade);bQ(pFade);
     bT(0,dye.read.tex);u1i(pFade,'uD',0);
+    bT(1,wave.read.tex);u1i(pFade,'uW',1);
     u2f(pFade,'ts',1/DYE,1/DYE);
+    u2f(pFade,'wts',1/SIM,1/SIM);
+    gl.uniform1f(gl.getUniformLocation(pFade,'k'),0.32);
     blit(dye.write);dye.swap();
     // Render to screen
     gl.viewport(0,0,cv.width,cv.height);gl.bindFramebuffer(gl.FRAMEBUFFER,null);
